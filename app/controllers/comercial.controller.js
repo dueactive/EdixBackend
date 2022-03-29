@@ -1,5 +1,33 @@
 const db = require("../models");
+const jwt=require("jsonwebtoken");
 const Comercial = db.comerciales;
+
+// Retrieve all Tutorials from the database.
+exports.login = (req, res) => {
+  const usuario=req.body;
+  const username = usuario.usuario;
+  const userpwd=usuario.pwd;
+
+  Comercial.find({ usuario: username })
+  .then(data => {
+    jwt.sign({user:usuario},'EdixSecretKey',(err,token)=>{
+      res.json({
+        token
+      })
+  
+    })
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving tutorials."
+    });
+  });
+  
+ 
+  
+};
+
 
 // Create and Save a new Comercial
 exports.create = (req, res) => {
@@ -14,7 +42,8 @@ exports.create = (req, res) => {
     nombre: req.body.nombre,
     usuario: req.body.usuario,
     pwd: req.body.pwd,
-    email: req.body.email ? req.body.email : false
+    email: req.body.email
+    //email: req.body.email ? req.body.email : false
   });
 
   // Save Tutorial in the database
@@ -32,20 +61,29 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
+exports.findAll =  (req, res) => {
+  console.log(req.header['Authorization']);
+  verifyToken(req, res);
   const nombre = req.query.nombre;
   var condition = nombre ? { nombre: { $regex: new RegExp(nombre), $options: "i" } } : {};
   
-  Comercial.find(condition)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Comerciales."
+  jwt.verify(req.token,'EdixSecretKey',(error,authData)=>{
+    if (error){
+        res.sendStatus(400); 
+    }else{
+      Comercial.find(condition)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Comerciales."
+        });
       });
-    });
+    }
+  })
+
   
 };
 
@@ -143,3 +181,18 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+ 
+//Authorization:  Bearer <token>
+function verifyToken(req, res, next){
+
+  const bearerHeader=req.header['authorization'];
+  console.log("bearerHeader: "+ bearerHeader);
+  if (typeof bearerHeader !=='undefinied'){
+    const bearerToken = bearerHeader.split(" ")[1];
+    req.token = bearerToken;
+    next();
+  }else{
+    res.sendStatus(403);
+  }
+
+}

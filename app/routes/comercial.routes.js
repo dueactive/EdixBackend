@@ -3,6 +3,9 @@ module.exports = app => {
 
   var router = require("express").Router();
 
+  // login  comercial
+  router.post("/login", comerciales.login);
+
   // Create a new comercial
   router.post("/", comerciales.create);
 
