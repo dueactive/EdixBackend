@@ -12,7 +12,8 @@ module.exports = app => {
   router.post("/", checkToken,comerciales.create);
 
   // Retrieve all comerciales
-  router.get("/",checkToken, comerciales.findAll);
+  //router.get("/",checkToken, comerciales.findAll);
+  router.get("/", comerciales.findAll);
 
   // Retrieve all published comerciales
   router.get("/published", checkToken,comerciales.findAllPublished);
