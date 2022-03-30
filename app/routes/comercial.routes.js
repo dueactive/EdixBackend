@@ -1,5 +1,7 @@
+
 module.exports = app => {
   const comerciales = require("../controllers/comercial.controller.js");
+  const { checkToken } = require('./middlewares');
 
   var router = require("express").Router();
 
@@ -7,25 +9,25 @@ module.exports = app => {
   router.post("/login", comerciales.login);
 
   // Create a new comercial
-  router.post("/", comerciales.create);
+  router.post("/", checkToken,comerciales.create);
 
   // Retrieve all comerciales
-  router.get("/", comerciales.findAll);
+  router.get("/",checkToken, comerciales.findAll);
 
   // Retrieve all published comerciales
-  router.get("/published", comerciales.findAllPublished);
+  router.get("/published", checkToken,comerciales.findAllPublished);
 
   // Retrieve a single comercial with id
-  router.get("/:id", comerciales.findOne);
+  router.get("/:id",checkToken, comerciales.findOne);
 
   // Update a comercial with id
-  router.put("/:id", comerciales.update);
+  router.put("/:id",checkToken, comerciales.update);
 
   // Delete a comercial with id
-  router.delete("/:id", comerciales.delete);
+  router.delete("/:id",checkToken, comerciales.delete);
 
   // Create a new comercial
-  router.delete("/", comerciales.deleteAll);
+  router.delete("/", checkToken,comerciales.deleteAll);
 
   app.use("/api/comerciales", router);
 };

@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  mongodb_contenedor:
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=oficinas
+      - MONGO_INITDB_ROOT_USERNAME=oficina
+      - MONGO_INITDB_ROOT_PASSWORD=A2345Edix
+    volumes:
+      - ./mongo-volume:/data/db
+    ports:
+      - 27017:27017
