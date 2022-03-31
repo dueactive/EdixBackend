@@ -19,7 +19,8 @@ exports.login = (req, res) => {
     if (data!=null){
        var result = bcrypt.compareSync(req.body.pwd, data.pwd);
         if (result) {
-          jwt.sign({user:usuario},'EdixSecretKey',{ expiresIn: '20m' },(err,token)=>{
+          jwt.sign({user:usuario},'EdixSecretKey',(err,token)=>{
+          //jwt.sign({user:usuario},'EdixSecretKey',{ expiresIn: '20m' },(err,token)=>{
             res.json({
               token
             })
