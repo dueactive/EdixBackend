@@ -22,6 +22,7 @@ exports.login = (req, res) => {
           jwt.sign({user:usuario},'EdixSecretKey',(err,token)=>{
           //jwt.sign({user:usuario},'EdixSecretKey',{ expiresIn: '20m' },(err,token)=>{
             res.json({
+              data,
               token
             })
           })
