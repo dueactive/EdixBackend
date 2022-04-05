@@ -71,10 +71,11 @@ exports.create = (req, res) => {
       const usuario=req.body;
       const username = usuario.usuario;
      
-    
+      
       Comercial.findOne({ usuario: username })
       .then(data => {
-        if (data=null){
+        if (!data){
+        
           comercial
           .save(comercial)
           .then(data => {
@@ -82,25 +83,23 @@ exports.create = (req, res) => {
           })
           .catch(err => {
             res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the Comerical."
+              message:  "Some error occurred while creating the Comerical."
             });
           });
-
+        
         } else {
           res.status(200).send({
-            message:
-              err.message || "Ya existe este usuario"
+            message:  "Ya existe este usuario"
           });
         }
-        
+       
       })
       .catch(err => {
         res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving tutorials."
+          message:  "Some error occurred while retrieving tutorials."
         });
       });
+      
 };
 
 // Retrieve all Tutorials from the database.

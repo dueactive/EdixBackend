@@ -29,8 +29,7 @@ module.exports = app => {
   // Delete a comercial with id
   router.delete("/:id",checkToken, comerciales.delete);
 
-  // Create a new comercial
-  router.delete("/", checkToken,comerciales.deleteAll);
+
 
   app.use("/api/comerciales", router);
 };

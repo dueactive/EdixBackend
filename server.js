@@ -1,8 +1,9 @@
 const express = require("express");
-// const bodyParser = require("body-parser"); /* deprecated */
+const path = require('path');
 const cors = require("cors");
 
 const app = express();
+const { checkToken } = require('./app/routes/middlewares');
 
 var corsOptions = {
   origin: "http://localhost:8082"
@@ -33,12 +34,19 @@ db.mongoose
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Welcome to TFGEdix application." });
 });
 
-//require("./app/routes/turorial.routes")(app);
-require("./app/routes/comercial.routes")(app);
 
+require("./app/routes/comercial.routes")(app);
+require("./app/routes/oficinas.routes")(app);
+
+//Static Files
+var public = path.join(__dirname, '/app/imagenes');
+//Con autorizacion
+//app.use('/imagenes', checkToken ,express.static(public));
+//Sin autorizacion
+app.use('/imagenes' ,express.static(public));
 // set port, listen for requests
 const PORT = process.env.PORT || 8082;
 app.listen(PORT, () => {
